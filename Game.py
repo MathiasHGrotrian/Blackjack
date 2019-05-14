@@ -45,17 +45,6 @@ def deal_card(player, deck):
     elif player.title == 'Player':
         print(player.title  + ' received: ' + card.__str__())
 
-def check_rank(card):
-    if card.rank == 'Ace':
-        return 1
-    elif card.rank == 'Jack':
-        return 10
-    elif card.rank == 'Queen':
-        return 10
-    elif card.rank == 'King':
-        return 10
-    return card.rank
-
 def add_to_pool(player, dealer,amount):
     player.wallet -= amount
     dealer.wallet += amount
@@ -89,16 +78,6 @@ def start_game(game_running):
             print('Wrong')
 
 
-def calculate_total_rank(player):
-    sum_of_rank = 0
-    for card in player.hand:
-        sum_of_rank += check_rank(card)
-
-    if sum_of_rank > 21:
-        return 'lost'
-    
-    return sum_of_rank
-
 def start_player_game(player, dealer, deck):
     deal_card(player, deck)
     deal_card(dealer, deck)
@@ -108,20 +87,34 @@ def start_player_game(player, dealer, deck):
     game_in_progress = True
 
     while game_in_progress:
-        player_options(player, deck)
-        if calculate_total_rank(player) == 'lost':
+        player_options(player, deck, dealer, game_in_progress)
+        if player.calculate_total_rank() == 'lost':
             game_in_progress = False
     
 
 
 def hit(player, deck):
     deal_card(player, deck)
-    print('Player has ' + str(calculate_total_rank(player)))
+    print('Player has ' + str(player.calculate_total_rank()))
+
+def stand(player, deck, dealer, game_in_progress):
+    if player.calculate_total_rank() > dealer.calculate_total_rank():
+        print('You won!')
+        game_in_progress = False
+    elif player.calculate_total_rank() < dealer.calculate_total_rank():
+        print('You lost')
+        game_in_progress = False
+    elif dealer.calculate_total_rank() > 21:
+        print('You won. Dealer bust')
+        game_in_progress = False
+    else:
+        print('Its a tie. You lose')
+        game_in_progress = False
 
 def start_dealer_game():
     pass
 
-def player_options(player, deck):
+def player_options(player, deck, dealer, game_in_progress):
 
     print('Choose an action\n1. Hit\n2. Stand\n3. Split\n4. Surrender\n5. Insurance')
 
@@ -130,7 +123,7 @@ def player_options(player, deck):
     if choice == '1':
         hit(player, deck)
     elif choice == '2':
-        pass
+        stand(player, deck, dealer, game_in_progress)
     elif choice == '3':
         pass
     elif choice == '4':
@@ -144,11 +137,3 @@ if __name__ == "__main__":
     game_running = True
 
     start_game(game_running)
-
-        
-
-    
-
-        
-    
-    
