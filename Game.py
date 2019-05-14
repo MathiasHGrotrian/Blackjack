@@ -62,12 +62,28 @@ def withdraw_from_pool(player, dealer, amount):
     player.wallet += amount
     dealer.wallet -= amount
 
+def start_game():
+    print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer')
+    
+    choice = input()
+
+    if choice == '1':
+        print("Player chosen")
+    elif choice == '2':
+        print("Dealer chosen")
+    else:
+        print('Wrong')
+
+    #continue
+
 
 if __name__ == "__main__":
+
+    start_game()
     
     deck = make_deck()
 
-    #random.shuffle(deck)
+    random.shuffle(deck)
 
     player = Player('Player', 1000, [])
     dealer = Player('Dealer', 1000, [])
