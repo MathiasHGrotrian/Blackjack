@@ -76,6 +76,14 @@ def start_game():
 
     #continue
 
+def calculate_total_rank(player):
+    sum_of_rank = 0
+    for card in player.hand:
+        sum_of_rank += check_rank(card)
+    
+    return sum_of_rank
+
+
 
 if __name__ == "__main__":
 
@@ -93,10 +101,14 @@ if __name__ == "__main__":
     deal_card(deck, player)
     deal_card(deck, dealer)
 
+
+
     for card in deck:
         print(card.__str__())
 
     print(len(deck))
+
+    print(calculate_total_rank(player))
 
     
 
