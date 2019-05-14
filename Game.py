@@ -64,30 +64,30 @@ def withdraw_from_pool(player, dealer, amount):
     player.wallet += amount
     dealer.wallet -= amount
 
-def start_game():
-    deck = make_deck()
+def start_game(game_running):
+    while game_running:
+        deck = make_deck()
 
-    random.shuffle(deck)
+        random.shuffle(deck)
 
-    player = Player('Player', 1000, [])
-    dealer = Player('Dealer', 1000, [])
+        player = Player('Player', 1000, [])
+        dealer = Player('Dealer', 1000, [])
 
-    print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
-    
-    choice = input()
+        print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
+        
+        choice = input()
 
-    if choice == '1':
-        print("Player chosen")
-        start_player_game(player, dealer, deck)
-    elif choice == '2':
-        print("Dealer chosen")
-    elif choice == '3':
-        print("Game Quitting...")
-        return False
-    else:
-        print('Wrong')
+        if choice == '1':
+            print("Player chosen")
+            start_player_game(player, dealer, deck)
+        elif choice == '2':
+            print("Dealer chosen")
+        elif choice == '3':
+            print("Game Quitting...")
+            game_running = False
+        else:
+            print('Wrong')
 
-    #continue
 
 def calculate_total_rank(player):
     sum_of_rank = 0
@@ -143,8 +143,8 @@ if __name__ == "__main__":
 
     game_running = True
 
-    while game_running:
-        game_running = start_game()
+    start_game(game_running)
+
         
 
     
