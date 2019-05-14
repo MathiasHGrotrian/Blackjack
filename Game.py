@@ -40,10 +40,10 @@ def deal_card(player, deck):
     deck.remove(card)
 
     if player.title == 'Dealer' and len(player.hand) == 2:
-        print(player.title  + ' has: ' + player.hand[0].__str__())
-        print(player.title  + ' has a face down card')
+        print('Card dealt - ' + player.title  + ' has: ' + player.hand[0].__str__())
+        print('Card dealt - ' + player.title  + ' has a face down card')
     elif player.title == 'Player':
-        print(player.title  + ' received: ' + card.__str__())
+        print('Card dealt - ' + player.title  + ' received: ' + card.__str__())
 
 def add_to_pool(player, dealer,amount):
     player.wallet -= amount
@@ -67,7 +67,7 @@ def start_game(game_running):
         choice = input()
 
         if choice == '1':
-            print("Player chosen")
+            print("\nPlayer chosen\n")
             start_player_game(player, dealer, deck)
         elif choice == '2':
             print("Dealer chosen")
@@ -83,6 +83,7 @@ def start_player_game(player, dealer, deck):
     deal_card(dealer, deck)
     deal_card(player, deck)
     deal_card(dealer, deck)
+    print('\n')
 
     game_in_progress = True
 
@@ -94,13 +95,17 @@ def start_player_game(player, dealer, deck):
 
 
 def hit(player, deck):
+    print('\n')
     deal_card(player, deck)
-    print('Player has ' + str(player.calculate_total_rank()))
+
+    #if your hit exceeds 21 it should return you lost
 
 def stand(player, deck, dealer, game_in_progress):
+    print('\n')
     if player.calculate_total_rank() > dealer.calculate_total_rank():
         print('You won!')
         game_in_progress = False
+        #needs to exit the game in progress and not print the options again
     elif player.calculate_total_rank() < dealer.calculate_total_rank():
         print('You lost')
         game_in_progress = False
@@ -116,8 +121,11 @@ def start_dealer_game():
 
 def player_options(player, deck, dealer, game_in_progress):
 
-    print('Choose an action\n1. Hit\n2. Stand\n3. Split\n4. Surrender\n5. Insurance')
+    print('Player has ' + str(player.calculate_total_rank()))
+    print('Dealer has ' + player.hand[0].__str__())
 
+    print('-Choose an action\n1. Hit\n2. Stand\n3. Split\n4. Surrender\n5. Insurance')
+    
     choice = input()
 
     if choice == '1':
