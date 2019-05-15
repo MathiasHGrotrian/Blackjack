@@ -84,6 +84,7 @@ def start_player_game(player, dealer, deck):
     deal_card(player, deck)
     deal_card(dealer, deck)
     print('\n')
+    print('Player has ' + str(player.calculate_total_rank()))
 
     game_in_progress = True
 
@@ -93,18 +94,20 @@ def start_player_game(player, dealer, deck):
             game_in_progress = False
     
 
-
 def hit(player, deck):
     print('\n')
     deal_card(player, deck)
+    print('Player has ' + str(player.calculate_total_rank()))
 
     #if your hit exceeds 21 it should return you lost
+
 
 def stand(player, deck, dealer, game_in_progress):
     print('\n')
     if player.calculate_total_rank() > dealer.calculate_total_rank():
         print('You won!')
         game_in_progress = False
+        
         #needs to exit the game in progress and not print the options again
     elif player.calculate_total_rank() < dealer.calculate_total_rank():
         print('You lost')
@@ -121,8 +124,7 @@ def start_dealer_game():
 
 def player_options(player, deck, dealer, game_in_progress):
 
-    print('Player has ' + str(player.calculate_total_rank()))
-    print('Dealer has ' + player.hand[0].__str__())
+    print('Dealer has ' + dealer.hand[0].__str__())
 
     print('-Choose an action\n1. Hit\n2. Stand\n3. Split\n4. Surrender\n5. Insurance')
     
