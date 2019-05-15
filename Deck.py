@@ -1,4 +1,5 @@
 from Card import Card
+import random
 
 class Deck:
 
@@ -33,5 +34,7 @@ class Deck:
         cards = cards + self.make_suit([], 'Clubs')
         cards = cards + self.make_suit([], 'Spades')
         cards = cards + self.make_suit([], 'Diamonds')
+
+        random.shuffle(cards)
 
         return cards

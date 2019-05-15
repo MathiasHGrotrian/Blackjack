@@ -1,3 +1,5 @@
+# main class running the program
+
 import random
 from Card import Card
 from Deck import Deck
@@ -35,8 +37,6 @@ def start_game(game_running):
 
         deck = Deck([])
 
-        random.shuffle(deck.cards)
-
         player = Player('Player', 1000, [])
         dealer = Player('Dealer', 1000, [])
 
@@ -48,12 +48,12 @@ def start_game(game_running):
             print("\nPlayer chosen\n")
             start_player_game(player, dealer, deck.cards)
         elif choice == '2':
-            print("Dealer chosen")
+            print("\nDealer chosen\n")
         elif choice == '3':
-            print("Game Quitting...")
+            print("\nGame Quitting...")
             game_running = False
         else:
-            print('Wrong')
+            print('\nInvalid choice.\nPlease enter a valid number\n')
 
 # starts the game if player chooses to be a player and deals cards
 # keeps game going until player has lost or won
@@ -79,23 +79,22 @@ def hit(player, deck, game_in_progress):
     print('\nPlayer has ' + str(player.calculate_total_rank()))
 
     if(player.calculate_total_rank() > 21):
-        print('You lost, bust\n')
+        print('\nYou lost, bust')
 
     if(player.calculate_total_rank == 21):
-        print('You won, exactly 21\n')
+        print('\nYou won, exactly 21')
     
 # checks if player has won or lost in case of player folding
 # always returns false as game should be over when folding, no matter the outcome
 def stand(player, dealer):
-    print('\n')
     if(player.calculate_total_rank() > dealer.calculate_total_rank()):
-        print('You won!')
+        print('\nYou won!')
         return False
     elif(player.calculate_total_rank() < dealer.calculate_total_rank()):
-        print('You lost')
+        print('\nYou lost')
         return False
     elif(player.calculate_total_rank() == dealer.calculate_total_rank()):
-        print("It's a tie, you lost")
+        print("\nIt's a tie, you lost")
         return False
         
 
