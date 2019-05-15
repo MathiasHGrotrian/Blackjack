@@ -1,35 +1,7 @@
 import random
 from Card import Card
+from Deck import Deck
 from Player import Player
-
-def make_suit(deck, suit):
-
-    for rank in range(13):
-        if rank == 0:
-            card = Card(suit, 'Ace')
-        elif rank == 10:
-            card = Card(suit, 'Jack')
-        elif rank == 11:
-            card = Card(suit, 'Queen')
-        elif rank == 12:
-            card = Card(suit, 'King')
-        else:
-            card = Card(suit, rank + 1)
-        
-        deck.append(card)
-        
-
-    return deck
-
-def make_deck():
-    deck = []
-
-    deck = deck + make_suit([], 'Hearts')
-    deck = deck + make_suit([], 'Clubs')
-    deck = deck + make_suit([], 'Spades')
-    deck = deck + make_suit([], 'Diamonds')
-
-    return deck
 
 def deal_card(player, deck):
 
@@ -55,9 +27,10 @@ def withdraw_from_pool(player, dealer, amount):
 
 def start_game(game_running):
     while game_running:
-        deck = make_deck()
 
-        random.shuffle(deck)
+        deck = Deck([])
+
+        random.shuffle(deck.cards)
 
         player = Player('Player', 1000, [])
         dealer = Player('Dealer', 1000, [])
@@ -68,7 +41,7 @@ def start_game(game_running):
 
         if choice == '1':
             print("\nPlayer chosen\n")
-            start_player_game(player, dealer, deck)
+            start_player_game(player, dealer, deck.cards)
         elif choice == '2':
             print("Dealer chosen")
         elif choice == '3':
