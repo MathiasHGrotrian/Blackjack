@@ -3,6 +3,8 @@ from Card import Card
 from Deck import Deck
 from Player import Player
 
+# deals card to a player
+# prints the received card and hides a card if player is a dealer
 def deal_card(player, deck):
 
     card = random.choice(deck)
@@ -17,14 +19,17 @@ def deal_card(player, deck):
     elif player.title == 'Player':
         print('Card dealt - ' + player.title  + ' received: ' + card.__str__())
 
+# adds money from a players wallet to a pool
 def add_to_pool(player, dealer,amount):
     player.wallet -= amount
     dealer.wallet += amount
 
+# takes money from a players wallet to a pool
 def withdraw_from_pool(player, dealer, amount):
     player.wallet += amount
     dealer.wallet -= amount
 
+# starts the game, creates and shuffles deck and prompts player to choose a role or quit
 def start_game(game_running):
     while game_running:
 
@@ -50,22 +55,24 @@ def start_game(game_running):
         else:
             print('Wrong')
 
-
+# starts the game if player chooses to be a player and deals cards
+# keeps game going until player has lost or won
 def start_player_game(player, dealer, deck):
     deal_card(player, deck)
     deal_card(dealer, deck)
     deal_card(player, deck)
     deal_card(dealer, deck)
-    print('\n')
-    print('Player has ' + str(player.calculate_total_rank()))
+    
+    print('\nPlayer has ' + str(player.calculate_total_rank()))
 
     game_in_progress = True
-
 
     while game_in_progress:
         choice = player_options(player, deck, dealer, game_in_progress)
         game_in_progress = evaluate_win_condition(player, dealer, choice)
 
+# takes card from deck and hand to player
+# checks of player has lost or won
 def hit(player, deck, game_in_progress):
 
     deal_card(player, deck)
@@ -77,7 +84,8 @@ def hit(player, deck, game_in_progress):
     if(player.calculate_total_rank == 21):
         print('You won, exactly 21\n')
     
-
+# checks if player has won or lost in case of player folding
+# always returns false as game should be over when folding, no matter the outcome
 def stand(player, dealer):
     print('\n')
     if(player.calculate_total_rank() > dealer.calculate_total_rank()):
@@ -94,6 +102,7 @@ def stand(player, dealer):
 def start_dealer_game():
     pass
 
+# players options each turn
 def player_options(player, deck, dealer, game_in_progress):
 
     print('Dealer has ' + dealer.hand[0].__str__())
@@ -115,6 +124,8 @@ def player_options(player, deck, dealer, game_in_progress):
     elif choice == '5':
         pass
 
+# uses players choice and acts accordingly
+# returns false if game is over in any way, to break out of loop, else keep game going and return true
 def evaluate_win_condition(player, dealer, choice):
 
     if(choice == '1'):

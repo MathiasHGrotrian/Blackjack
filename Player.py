@@ -6,7 +6,7 @@ class Player:
         self.wallet = wallet
         self.hand = hand
 
-    
+    # calculates the current total on a players hand
     def calculate_total_rank(self):
         sum_of_rank = 0
         for card in self.hand:
@@ -14,6 +14,7 @@ class Player:
 
         return sum_of_rank
 
+    # converts a cards rank to a number
     def check_rank(self, card):
         if card.rank == 'Ace':
             return 1

@@ -5,6 +5,8 @@ class Deck:
     def __init__(self, cards):
         self.cards = self.make_deck()
 
+    # creates a list of cards with the given suit
+    # only used in make_deck()
     def make_suit(self, cards, suit):
         for rank in range(13):
             if rank == 0:
@@ -23,6 +25,7 @@ class Deck:
 
         return cards
 
+    # create a full deck with all suits
     def make_deck(self):
         cards = []
 
