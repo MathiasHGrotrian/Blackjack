@@ -88,9 +88,10 @@ def start_player_game(player, dealer, deck):
 
     game_in_progress = True
 
+
     while game_in_progress:
-        player_options(player, deck, dealer, game_in_progress)
-        game_in_progress = evaluate_win_condition(player)
+        choice = player_options(player, deck, dealer, game_in_progress)
+        game_in_progress = evaluate_win_condition(player, dealer, choice)
 
 def hit(player, deck, game_in_progress):
 
@@ -104,20 +105,17 @@ def hit(player, deck, game_in_progress):
         print('You won, exactly 21\n')
     
 
-def stand(player, deck, dealer, game_in_progress):
+def stand(player, dealer):
     print('\n')
-    if player.calculate_total_rank() > dealer.calculate_total_rank():
+    if(player.calculate_total_rank() > dealer.calculate_total_rank()):
         print('You won!')
-        
-        #needs to exit the game in progress and not print the options again
-    elif player.calculate_total_rank() < dealer.calculate_total_rank():
+        return False
+    elif(player.calculate_total_rank() < dealer.calculate_total_rank()):
         print('You lost')
-        
-    elif dealer.calculate_total_rank() > 21:
-        print('You won. Dealer bust')
-        
-    else:
-        print('Its a tie. You lose')
+        return False
+    elif(player.calculate_total_rank() == dealer.calculate_total_rank()):
+        print("It's a tie, you lost")
+        return False
         
 
 def start_dealer_game():
@@ -133,28 +131,34 @@ def player_options(player, deck, dealer, game_in_progress):
 
     if choice == '1':
         hit(player, deck, game_in_progress)
+        return choice
     elif choice == '2':
-        stand(player, deck, dealer, game_in_progress)
+        #stand(player, deck, dealer, game_in_progress)
+        return choice
     elif choice == '3':
         pass
     elif choice == '4':
         pass
     elif choice == '5':
         pass
-    
-def compare_hands(player, dealer):
-    if(player.calculate_total_rank > dealer.calculate_total_rank):
-        return 'won'
-    if(player.calculate_total_rank < dealer.calculate_total_rank):
-        return 'lost'
 
-def evaluate_win_condition(player):
-    if(player.calculate_total_rank() > 21):
-        return False
-    elif(player.calculate_total_rank() == 21):
-        return False
-    else:
-        return True
+def evaluate_win_condition(player, dealer, choice):
+
+    if(choice == '1'):
+        if(player.calculate_total_rank() > 21):
+            return False
+        elif(player.calculate_total_rank() == 21):
+            return False
+        else:
+            return True
+
+    if(choice == '2'):
+        return stand(player, dealer)
+        
+
+
+    #elif((compare_hands(player, dealer) == 'lost' or compare_hands(player, dealer) == 'won') and ()):
+    #    return False
 
 if __name__ == "__main__":
 
