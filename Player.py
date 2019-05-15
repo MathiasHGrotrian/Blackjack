@@ -12,12 +12,6 @@ class Player:
         for card in self.hand:
             sum_of_rank += self.check_rank(card)
 
-        if sum_of_rank > 21:
-            return 'lost'
-        
-        if sum_of_rank == 21:
-            return 'won'
-
         return sum_of_rank
 
     def check_rank(self, card):

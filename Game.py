@@ -90,34 +90,35 @@ def start_player_game(player, dealer, deck):
 
     while game_in_progress:
         player_options(player, deck, dealer, game_in_progress)
-        if player.calculate_total_rank() == 'lost':
-            game_in_progress = False
-    
+        game_in_progress = evaluate_win_condition(player)
 
-def hit(player, deck):
-    print('\n')
+def hit(player, deck, game_in_progress):
+
     deal_card(player, deck)
-    print('Player has ' + str(player.calculate_total_rank()))
+    print('\nPlayer has ' + str(player.calculate_total_rank()))
 
-    #if your hit exceeds 21 it should return you lost
+    if(player.calculate_total_rank() > 21):
+        print('You lost, bust\n')
 
+    if(player.calculate_total_rank == 21):
+        print('You won, exactly 21\n')
+    
 
 def stand(player, deck, dealer, game_in_progress):
     print('\n')
     if player.calculate_total_rank() > dealer.calculate_total_rank():
         print('You won!')
-        game_in_progress = False
         
         #needs to exit the game in progress and not print the options again
     elif player.calculate_total_rank() < dealer.calculate_total_rank():
         print('You lost')
-        game_in_progress = False
+        
     elif dealer.calculate_total_rank() > 21:
         print('You won. Dealer bust')
-        game_in_progress = False
+        
     else:
         print('Its a tie. You lose')
-        game_in_progress = False
+        
 
 def start_dealer_game():
     pass
@@ -131,7 +132,7 @@ def player_options(player, deck, dealer, game_in_progress):
     choice = input()
 
     if choice == '1':
-        hit(player, deck)
+        hit(player, deck, game_in_progress)
     elif choice == '2':
         stand(player, deck, dealer, game_in_progress)
     elif choice == '3':
@@ -141,6 +142,19 @@ def player_options(player, deck, dealer, game_in_progress):
     elif choice == '5':
         pass
     
+def compare_hands(player, dealer):
+    if(player.calculate_total_rank > dealer.calculate_total_rank):
+        return 'won'
+    if(player.calculate_total_rank < dealer.calculate_total_rank):
+        return 'lost'
+
+def evaluate_win_condition(player):
+    if(player.calculate_total_rank() > 21):
+        return False
+    elif(player.calculate_total_rank() == 21):
+        return False
+    else:
+        return True
 
 if __name__ == "__main__":
 
