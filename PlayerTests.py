@@ -1,3 +1,4 @@
+# test module for Player class
 
 import unittest
 from Player import Player
