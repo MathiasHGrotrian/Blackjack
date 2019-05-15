@@ -3,7 +3,7 @@ from Card import Card
 from Player import Player
 
 def make_suit(deck, suit):
-   
+
     for rank in range(13):
         if rank == 0:
             card = Card(suit, 'Ace')
