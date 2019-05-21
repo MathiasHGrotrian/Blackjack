@@ -20,9 +20,9 @@ def deal_card(player, deck):
         print('Card dealt - ' + player.title  + ' has a face down card')
     elif player.title == 'Player':
         print('Card dealt - ' + player.title  + ' received: ' + card.__str__())
-
+'''
 # adds money from a players wallet to a pool
-def add_to_pool(player, dealer,amount):
+def add_to_pool(player, dealer, amount):
     player.wallet -= amount
     dealer.wallet += amount
 
@@ -30,13 +30,18 @@ def add_to_pool(player, dealer,amount):
 def withdraw_from_pool(player, dealer, amount):
     player.wallet += amount
     dealer.wallet -= amount
+'''
 
 # starts the game, creates and shuffles deck and prompts player to choose a role or quit
 def start_game(game_running):
-    while game_running:
-        player = Player('Player', 1000, [])
-        dealer = Player('Dealer', 1000, [])
-        
+
+    player = Player('Player', 200, [])
+    dealer = Player('Dealer', 1000, [])
+
+    while game_running: 
+        player.hand = []
+        dealer.hand = []
+
         current_pool = 0
 
         deck = Deck([])
@@ -74,6 +79,18 @@ def start_player_game(player, dealer, deck, current_pool):
     while game_in_progress:
         choice = player_options(player, deck, dealer, game_in_progress)
         game_in_progress = evaluate_win_condition(player, dealer, choice)
+    
+    if(player.hasWon == True):
+        player.wallet += current_pool
+        dealer.wallet -= current_pool
+        print("You won $", current_pool, "!\n")
+        print("Your total is now: ", player.wallet)
+    if(player.hasWon == False):
+        player.wallet -= current_pool
+        dealer.wallet += current_pool
+        print("You lost $", current_pool, "...\n")
+        print("Your total is now: ", player.wallet)
+
 
 # takes card from deck and hand to player
 # checks of player has lost or won
@@ -93,12 +110,15 @@ def hit(player, deck, game_in_progress):
 def stand(player, dealer):
     if(player.calculate_total_rank() > dealer.calculate_total_rank()):
         print('\nYou won!')
+        player.hasWon = True
         return False
     elif(player.calculate_total_rank() < dealer.calculate_total_rank()):
         print('\nYou lost')
+        player.hasWon = False
         return False
     elif(player.calculate_total_rank() == dealer.calculate_total_rank()):
         print("\nIt's a tie, you lost")
+        player.hasWon = False
         return False
         
 
@@ -133,10 +153,17 @@ def player_options(player, deck, dealer, game_in_progress):
 def evaluate_win_condition(player, dealer, choice):
 
     if(choice == '1'):
+        #bust
         if(player.calculate_total_rank() > 21):
+            player.hasWon = False
             return False
+
+        #perfect
         elif(player.calculate_total_rank() == 21):
+            player.hasWon = True
             return False
+
+        #continue hitting
         else:
             return True
 
@@ -146,6 +173,7 @@ def evaluate_win_condition(player, dealer, choice):
 # player can place a bet, which will be varified.
 # returns current pool  
 def place_bet(player, current_pool):
+    print("\nYou currently have ", player.wallet)
     print("\nPlace your bets:")
 
     ongoing_bet = True
@@ -168,7 +196,7 @@ def place_bet(player, current_pool):
             ongoing_bet = False
             return current_pool
 
-            
+
 
 if __name__ == "__main__":
 

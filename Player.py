@@ -5,6 +5,7 @@ class Player:
         self.title = title
         self.wallet = wallet
         self.hand = hand
+        self.hasWon = False
 
     # calculates the current total on a players hand
     def calculate_total_rank(self):
