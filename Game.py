@@ -34,11 +34,12 @@ def withdraw_from_pool(player, dealer, amount):
 # starts the game, creates and shuffles deck and prompts player to choose a role or quit
 def start_game(game_running):
     while game_running:
-
-        deck = Deck([])
-
         player = Player('Player', 1000, [])
         dealer = Player('Dealer', 1000, [])
+        
+        current_pool = 0
+
+        deck = Deck([])
 
         print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
         
@@ -46,7 +47,7 @@ def start_game(game_running):
 
         if choice == '1':
             print("\nPlayer chosen\n")
-            start_player_game(player, dealer, deck.cards)
+            start_player_game(player, dealer, deck.cards, current_pool)
         elif choice == '2':
             print("\nDealer chosen\n")
         elif choice == '3':
@@ -57,7 +58,10 @@ def start_game(game_running):
 
 # starts the game if player chooses to be a player and deals cards
 # keeps game going until player has lost or won
-def start_player_game(player, dealer, deck):
+def start_player_game(player, dealer, deck, current_pool):
+
+    current_pool = place_bet(player, current_pool)
+
     deal_card(player, deck)
     deal_card(dealer, deck)
     deal_card(player, deck)
@@ -137,11 +141,32 @@ def evaluate_win_condition(player, dealer, choice):
 
     if(choice == '2'):
         return stand(player, dealer)
-        
 
 
-    #elif((compare_hands(player, dealer) == 'lost' or compare_hands(player, dealer) == 'won') and ()):
-    #    return False
+def place_bet(player, current_pool):
+    print("\nPlace your bets:")
+
+    ongoing_bet = True
+    
+    while(ongoing_bet):
+
+        bet = input()
+        bet = int(bet)
+
+        if(bet <= 0):
+            print("Please place a valid amount\n")
+            
+        elif(bet > player.wallet):
+            print("You don't have enough money to place that bet\n")
+            
+        else:
+            current_pool += bet
+            print("Your bet: ", bet)
+            print("")
+            ongoing_bet = False
+            return current_pool
+
+            
 
 if __name__ == "__main__":
 
