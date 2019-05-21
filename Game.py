@@ -119,6 +119,7 @@ def player_options(player, deck, dealer, game_in_progress):
         return choice
     elif choice == '2':
         #stand(player, deck, dealer, game_in_progress)
+        #stand is called in evaluate_win_condition!
         return choice
     elif choice == '3':
         pass
@@ -142,7 +143,8 @@ def evaluate_win_condition(player, dealer, choice):
     if(choice == '2'):
         return stand(player, dealer)
 
-
+# player can place a bet, which will be varified.
+# returns current pool  
 def place_bet(player, current_pool):
     print("\nPlace your bets:")
 
