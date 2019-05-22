@@ -97,6 +97,12 @@ def hit(player, deck):
     print('\nPlayer has ' + str(player.calculate_total_rank()))
 
     return evaluate_hit_win_condition(player)
+
+def stand(player, dealer):
+    print('\nPlayer has ' + str(player.calculate_total_rank()))
+    print('\nDealer has ' + str(dealer.calculate_total_rank()))
+
+    return evaluate_stand_win_condition(player, dealer)
     
 # checks if player has won or lost in case of player folding
 # always returns false as game should be over when folding, no matter the outcome
@@ -111,14 +117,17 @@ def evaluate_stand_win_condition(player, dealer):
         print("\nIt's a tie")
         player.hasWon = False
         return False
+    elif player.calculate_total_rank() > 21:
+        player.hasWon = False
+        return False
 
 def double_down(player, dealer, deck):
     if(player.bet * 2 > player.wallet):
         print("You don't have enough money to double down with this bet")
     else:
         player.bet *= 2
-        hit(player, deck)
-        evaluate_stand_win_condition(player, dealer)
+        deal_card(player, deck)
+        stand(player, dealer)
 
 
 def start_dealer_game():
@@ -136,7 +145,7 @@ def player_options(player, deck, dealer):
     if choice == '1':
         return hit(player, deck)
     elif choice == '2':
-        return evaluate_stand_win_condition(player, dealer)
+        return stand(player, dealer)
     elif choice == '3':
         return double_down(player, dealer, deck)
     elif choice == '4':
