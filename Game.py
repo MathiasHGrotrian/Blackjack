@@ -1,25 +1,11 @@
 # main class running the program
 
 import random
+
 from Card import Card
 from Deck import Deck
 from Player import Player
-
-# deals card to a player
-# prints the received card and hides a card if player is a dealer
-def deal_card(player, deck):
-
-    card = random.choice(deck)
-
-    player.hand.append(card)
-
-    deck.remove(card)
-
-    if player.title == 'Dealer' and len(player.hand) == 2:
-        print('Card dealt - ' + player.title  + ' has: ' + player.hand[0].__str__())
-        print('Card dealt - ' + player.title  + ' has a face down card')
-    elif player.title == 'Player':
-        print('Card dealt - ' + player.title  + ' received: ' + card.__str__())
+from Dealer import Dealer
 
 # adds money from a players wallet to a pool
 def dealer_wins_pool(player, dealer):
@@ -40,7 +26,7 @@ def player_wins_pool(player, dealer):
 def start_game(game_running):
 
     player = Player('Player', 200, [])
-    dealer = Player('Dealer', 1000, [])
+    dealer = Dealer('Dealer', 1000, [])
 
     while game_running: 
         
@@ -71,10 +57,10 @@ def start_player_game(player, dealer, deck):
 
     place_bet(player)
 
-    deal_card(player, deck)
-    deal_card(dealer, deck)
-    deal_card(player, deck)
-    deal_card(dealer, deck)
+    dealer.deal_card(player, deck)
+    dealer.deal_card(dealer, deck)
+    dealer.deal_card(player, deck)
+    dealer.deal_card(dealer, deck)
     
     print('\nPlayer has ' + str(player.calculate_total_rank()))
 
@@ -91,9 +77,9 @@ def start_player_game(player, dealer, deck):
 
 # takes card from deck and hand to player
 # checks of player has lost or won
-def hit(player, deck):
+def hit(player, dealer, deck):
 
-    deal_card(player, deck)
+    dealer.deal_card(player, deck)
     print('\nPlayer has ' + str(player.calculate_total_rank()))
 
     return evaluate_hit_win_condition(player)
@@ -126,7 +112,7 @@ def double_down(player, dealer, deck):
         print("You don't have enough money to double down with this bet")
     else:
         player.bet *= 2
-        deal_card(player, deck)
+        dealer.deal_card(player, deck)
         stand(player, dealer)
 
 
@@ -143,7 +129,7 @@ def player_options(player, deck, dealer):
     choice = input()
 
     if choice == '1':
-        return hit(player, deck)
+        return hit(player, dealer, deck)
     elif choice == '2':
         return stand(player, dealer)
     elif choice == '3':
