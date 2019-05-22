@@ -5,7 +5,7 @@ class Person:
         self.wallet = wallet
         self.hand = hand
 
-    # calculates the current total on a players hand
+    # calculates the current total on a persons hand
     def calculate_total_rank(self):
         sum_of_rank = 0
         for card in self.hand:

@@ -84,16 +84,28 @@ def hit(player, dealer, deck):
 
     return evaluate_hit_win_condition(player)
 
-def stand(player, dealer):
+def stand(player, dealer, deck):
     print('\nPlayer has ' + str(player.calculate_total_rank()))
-    print('\nDealer has ' + str(dealer.calculate_total_rank()))
+    print('\nDealers hidden card is: ' + dealer.hand[1].__str__())
+    print('Dealer has ' + str(dealer.calculate_total_rank()))
+
+    while(dealer.calculate_total_rank() < 17):
+        dealer.deal_card(dealer, deck)
+        print('\nDealer received ' + dealer.hand[len(dealer.hand) - 1].__str__())
+        print('Dealer has ' + str(dealer.calculate_total_rank()) + '\n')
 
     return evaluate_stand_win_condition(player, dealer)
     
 # checks if player has won or lost in case of player folding
 # always returns false as game should be over when folding, no matter the outcome
 def evaluate_stand_win_condition(player, dealer):
-    if(player.calculate_total_rank() > dealer.calculate_total_rank()):
+    if player.calculate_total_rank() > 21:
+        player.hasWon = False
+        return False
+    elif dealer.calculate_total_rank() > 21:
+        player.hasWon = True
+        return False
+    elif(player.calculate_total_rank() > dealer.calculate_total_rank()):
         player.hasWon = True
         return False
     elif(player.calculate_total_rank() < dealer.calculate_total_rank()):
@@ -103,9 +115,6 @@ def evaluate_stand_win_condition(player, dealer):
         print("\nIt's a tie")
         player.hasWon = False
         return False
-    elif player.calculate_total_rank() > 21:
-        player.hasWon = False
-        return False
 
 def double_down(player, dealer, deck):
     if(player.bet * 2 > player.wallet):
@@ -113,7 +122,7 @@ def double_down(player, dealer, deck):
     else:
         player.bet *= 2
         dealer.deal_card(player, deck)
-        stand(player, dealer)
+        stand(player, dealer, deck)
 
 
 def start_dealer_game():
@@ -131,7 +140,7 @@ def player_options(player, deck, dealer):
     if choice == '1':
         return hit(player, dealer, deck)
     elif choice == '2':
-        return stand(player, dealer)
+        return stand(player, dealer, deck)
     elif choice == '3':
         return double_down(player, dealer, deck)
     elif choice == '4':
