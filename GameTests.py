@@ -8,6 +8,9 @@ from Card import Card
 def test_evaluate_win_condition(player, dealer, choice, exp_bool):
     assert Game.evaluate_win_condition(player, dealer, choice) == exp_bool, 'Should be ' + str(exp_bool)
 
+def test_place_bet(player, current_pool, exp_int):
+    assert Game.place_bet(player, current_pool) == exp_int, 'S'
+
 
 if __name__ == "__main__":
     player = Player('Player', 1000, [Card('Hearts', 10),Card('Hearts', 5) ])

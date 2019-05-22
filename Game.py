@@ -20,17 +20,21 @@ def deal_card(player, deck):
         print('Card dealt - ' + player.title  + ' has a face down card')
     elif player.title == 'Player':
         print('Card dealt - ' + player.title  + ' received: ' + card.__str__())
-'''
+
 # adds money from a players wallet to a pool
-def add_to_pool(player, dealer, amount):
-    player.wallet -= amount
-    dealer.wallet += amount
+def dealer_wins_pool(player, dealer, current_pool):
+    player.wallet -= current_pool
+    dealer.wallet += current_pool
+    print("You lost $", current_pool, "...\n")
+    print("Your total is now: ", player.wallet)
 
 # takes money from a players wallet to a pool
-def withdraw_from_pool(player, dealer, amount):
-    player.wallet += amount
-    dealer.wallet -= amount
-'''
+def player_wins_pool(player, dealer, current_pool):
+    player.wallet += current_pool
+    dealer.wallet -= current_pool
+    print("You won $", current_pool, "!\n")
+    print("Your total is now: ", player.wallet)
+
 
 # starts the game, creates and shuffles deck and prompts player to choose a role or quit
 def start_game(game_running):
@@ -39,11 +43,11 @@ def start_game(game_running):
     dealer = Player('Dealer', 1000, [])
 
     while game_running: 
+        
+        #Resets for a new round
         player.hand = []
         dealer.hand = []
-
         current_pool = 0
-
         deck = Deck([])
 
         print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
@@ -80,16 +84,10 @@ def start_player_game(player, dealer, deck, current_pool):
         choice = player_options(player, deck, dealer, game_in_progress)
         game_in_progress = evaluate_win_condition(player, dealer, choice)
     
-    if(player.hasWon == True):
-        player.wallet += current_pool
-        dealer.wallet -= current_pool
-        print("You won $", current_pool, "!\n")
-        print("Your total is now: ", player.wallet)
-    if(player.hasWon == False):
-        player.wallet -= current_pool
-        dealer.wallet += current_pool
-        print("You lost $", current_pool, "...\n")
-        print("Your total is now: ", player.wallet)
+    if(player.hasWon):
+        player_wins_pool(player, dealer, current_pool)
+    else:
+        dealer_wins_pool(player, dealer, current_pool)
 
 
 # takes card from deck and hand to player
@@ -179,9 +177,18 @@ def place_bet(player, current_pool):
     ongoing_bet = True
     
     while(ongoing_bet):
+        
+        #makes sure that bet is numeric
+        checkdigits = True
+        while(checkdigits):
+            bet = input()
+            if(bet.isdigit()):
+                bet = int(bet)
+                checkdigits = False
+            else:
+                print("Please enter numbers, not letters\n")
 
-        bet = input()
-        bet = int(bet)
+        
 
         if(bet <= 0):
             print("Please place a valid amount\n")
