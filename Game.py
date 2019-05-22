@@ -22,17 +22,17 @@ def deal_card(player, deck):
         print('Card dealt - ' + player.title  + ' received: ' + card.__str__())
 
 # adds money from a players wallet to a pool
-def dealer_wins_pool(player, dealer, current_pool):
-    player.wallet -= current_pool
-    dealer.wallet += current_pool
-    print("You lost $", current_pool, "...\n")
+def dealer_wins_pool(player, dealer):
+    player.wallet -= player.bet
+    dealer.wallet += player.bet
+    print("You lost $", player.bet, "...\n")
     print("Your total is now: ", player.wallet)
 
 # takes money from a players wallet to a pool
-def player_wins_pool(player, dealer, current_pool):
-    player.wallet += current_pool
-    dealer.wallet -= current_pool
-    print("You won $", current_pool, "!\n")
+def player_wins_pool(player, dealer):
+    player.wallet += player.bet
+    dealer.wallet -= player.bet
+    print("You won $", player.bet, "!\n")
     print("Your total is now: ", player.wallet)
 
 
@@ -47,7 +47,7 @@ def start_game(game_running):
         #Resets for a new round
         player.hand = []
         dealer.hand = []
-        current_pool = 0
+        player.bet = 0
         deck = Deck([])
 
         print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
@@ -56,7 +56,7 @@ def start_game(game_running):
 
         if choice == '1':
             print("\nPlayer chosen\n")
-            start_player_game(player, dealer, deck.cards, current_pool)
+            start_player_game(player, dealer, deck.cards)
         elif choice == '2':
             print("\nDealer chosen\n")
         elif choice == '3':
@@ -67,9 +67,9 @@ def start_game(game_running):
 
 # starts the game if player chooses to be a player and deals cards
 # keeps game going until player has lost or won
-def start_player_game(player, dealer, deck, current_pool):
+def start_player_game(player, dealer, deck):
 
-    current_pool = place_bet(player, current_pool)
+    place_bet(player)
 
     deal_card(player, deck)
     deal_card(dealer, deck)
@@ -85,9 +85,9 @@ def start_player_game(player, dealer, deck, current_pool):
         game_in_progress = evaluate_win_condition(player, dealer, choice)
     
     if(player.hasWon):
-        player_wins_pool(player, dealer, current_pool)
+        player_wins_pool(player, dealer)
     else:
-        dealer_wins_pool(player, dealer, current_pool)
+        dealer_wins_pool(player, dealer)
 
 
 # takes card from deck and hand to player
@@ -118,7 +118,6 @@ def stand(player, dealer):
         print("\nIt's a tie, you lost")
         player.hasWon = False
         return False
-        
 
 def start_dealer_game():
     pass
@@ -128,7 +127,7 @@ def player_options(player, deck, dealer, game_in_progress):
 
     print('Dealer has ' + dealer.hand[0].__str__())
 
-    print('-Choose an action\n1. Hit\n2. Stand\n3. Split\n4. Surrender\n5. Insurance')
+    print('-Choose an action\n1. Hit\n2. Stand\n3. Double Down\n4. Split\n5. Surrender\n 6. Insurance')
     
     choice = input()
 
@@ -136,7 +135,6 @@ def player_options(player, deck, dealer, game_in_progress):
         hit(player, deck, game_in_progress)
         return choice
     elif choice == '2':
-        #stand(player, deck, dealer, game_in_progress)
         #stand is called in evaluate_win_condition!
         return choice
     elif choice == '3':
@@ -170,7 +168,7 @@ def evaluate_win_condition(player, dealer, choice):
 
 # player can place a bet, which will be varified.
 # returns current pool  
-def place_bet(player, current_pool):
+def place_bet(player):
     print("\nYou currently have ", player.wallet)
     print("\nPlace your bets:")
 
@@ -197,11 +195,10 @@ def place_bet(player, current_pool):
             print("You don't have enough money to place that bet\n")
             
         else:
-            current_pool += bet
+            player.bet += bet
             print("Your bet: ", bet)
             print("")
             ongoing_bet = False
-            return current_pool
 
 
 

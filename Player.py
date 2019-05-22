@@ -6,6 +6,7 @@ class Player:
         self.wallet = wallet
         self.hand = hand
         self.hasWon = False
+        self.bet = 0
 
     # calculates the current total on a players hand
     def calculate_total_rank(self):
@@ -26,4 +27,3 @@ class Player:
         elif card.rank == 'King':
             return 10
         return card.rank
-    
