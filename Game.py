@@ -81,8 +81,7 @@ def start_player_game(player, dealer, deck):
     game_in_progress = True
 
     while game_in_progress:
-        choice = player_options(player, deck, dealer, game_in_progress)
-        game_in_progress = evaluate_win_condition(player, dealer, choice)
+        game_in_progress = player_options(player, deck, dealer)
     
     if(player.hasWon):
         player_wins_pool(player, dealer)
@@ -92,38 +91,41 @@ def start_player_game(player, dealer, deck):
 
 # takes card from deck and hand to player
 # checks of player has lost or won
-def hit(player, deck, game_in_progress):
+def hit(player, deck):
 
     deal_card(player, deck)
     print('\nPlayer has ' + str(player.calculate_total_rank()))
 
-    if(player.calculate_total_rank() > 21):
-        print('\nYou lost, bust')
-
-    if(player.calculate_total_rank == 21):
-        print('\nYou won, exactly 21')
+    return evaluate_hit_win_condition(player)
     
 # checks if player has won or lost in case of player folding
 # always returns false as game should be over when folding, no matter the outcome
-def stand(player, dealer):
+def evaluate_stand_win_condition(player, dealer):
     if(player.calculate_total_rank() > dealer.calculate_total_rank()):
-        print('\nYou won!')
         player.hasWon = True
         return False
     elif(player.calculate_total_rank() < dealer.calculate_total_rank()):
-        print('\nYou lost')
         player.hasWon = False
         return False
     elif(player.calculate_total_rank() == dealer.calculate_total_rank()):
-        print("\nIt's a tie, you lost")
+        print("\nIt's a tie")
         player.hasWon = False
         return False
+
+def double_down(player, dealer, deck):
+    if(player.bet * 2 > player.wallet):
+        print("You don't have enough money to double down with this bet")
+    else:
+        player.bet *= 2
+        hit(player, deck)
+        evaluate_stand_win_condition(player, dealer)
+
 
 def start_dealer_game():
     pass
 
 # players options each turn
-def player_options(player, deck, dealer, game_in_progress):
+def player_options(player, deck, dealer):
 
     print('Dealer has ' + dealer.hand[0].__str__())
 
@@ -132,13 +134,11 @@ def player_options(player, deck, dealer, game_in_progress):
     choice = input()
 
     if choice == '1':
-        hit(player, deck, game_in_progress)
-        return choice
+        return hit(player, deck)
     elif choice == '2':
-        #stand is called in evaluate_win_condition!
-        return choice
+        return evaluate_stand_win_condition(player, dealer)
     elif choice == '3':
-        pass
+        return double_down(player, dealer, deck)
     elif choice == '4':
         pass
     elif choice == '5':
@@ -146,25 +146,21 @@ def player_options(player, deck, dealer, game_in_progress):
 
 # uses players choice and acts accordingly
 # returns false if game is over in any way, to break out of loop, else keep game going and return true
-def evaluate_win_condition(player, dealer, choice):
+def evaluate_hit_win_condition(player):
+    #bust
+    if(player.calculate_total_rank() > 21):
+        player.hasWon = False
+        return False
 
-    if(choice == '1'):
-        #bust
-        if(player.calculate_total_rank() > 21):
-            player.hasWon = False
-            return False
+    #perfect
+    elif(player.calculate_total_rank() == 21):
+        player.hasWon = True
+        return False
 
-        #perfect
-        elif(player.calculate_total_rank() == 21):
-            player.hasWon = True
-            return False
+    #continue hitting
+    else:
+        return True
 
-        #continue hitting
-        else:
-            return True
-
-    if(choice == '2'):
-        return stand(player, dealer)
 
 # player can place a bet, which will be varified.
 # returns current pool  
