@@ -2,8 +2,6 @@
 
 import random
 
-from Card import Card
-from Deck import Deck
 from Player import Player
 from Dealer import Dealer
 
@@ -34,7 +32,7 @@ def start_game(game_running):
         player.hand = []
         dealer.hand = []
         player.bet = 0
-        deck = Deck([])
+        deck = dealer.deck
 
         print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
         
@@ -98,6 +96,7 @@ def stand(player, dealer, deck):
     
 # checks if player has won or lost in case of player folding
 # always returns false as game should be over when folding, no matter the outcome
+# is also called when double down is selected
 def evaluate_stand_win_condition(player, dealer):
     if player.calculate_total_rank() > 21:
         player.hasWon = False

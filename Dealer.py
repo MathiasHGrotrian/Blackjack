@@ -1,10 +1,12 @@
 import random
 from Person import Person
+from Deck import Deck
 
 class Dealer(Person):
 
     def __init__(self, title, wallet, hand):
         Person.__init__(self, title, wallet, hand)
+        self.deck = Deck([])
 
     # deals card to a player
     # prints the received card and hides a card if player is a dealer
