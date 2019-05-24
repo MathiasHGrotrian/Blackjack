@@ -4,32 +4,31 @@ import random
 
 from Player import Player
 from Dealer import Dealer
+from Card import Card
 
 # adds money from a players wallet to a pool
 def dealer_wins_pool(player, dealer):
     player.wallet -= player.bet
     dealer.wallet += player.bet
-    print("You lost $", player.bet, "...\n")
-    print("Your total is now: ", player.wallet)
 
 # takes money from a players wallet to a pool
 def player_wins_pool(player, dealer):
     player.wallet += player.bet
     dealer.wallet -= player.bet
-    print("You won $", player.bet, "!\n")
-    print("Your total is now: ", player.wallet)
 
 
 # starts the game, creates and shuffles deck and prompts player to choose a role or quit
 def start_game(game_running):
 
+    # 
     player = Player('Player', 200, [])
     dealer = Dealer('Dealer', 1000, [])
 
     while game_running: 
         
         #Resets for a new round
-        player.hand = []
+        # Player has a list within list so he can have two hands for splitting
+        player.hand = [[Card('Hearts', 10),Card('Clubs', 10) ]]
         dealer.hand = []
         player.bet = 0
         deck = dealer.deck
@@ -55,10 +54,10 @@ def start_player_game(player, dealer, deck):
 
     place_bet(player)
 
-    dealer.deal_card(player, deck)
-    dealer.deal_card(dealer, deck)
-    dealer.deal_card(player, deck)
-    dealer.deal_card(dealer, deck)
+    #dealer.deal_player_card(player, deck)
+    dealer.deal_dealer_card(dealer, deck)
+    #dealer.deal_player_card(player, deck)
+    dealer.deal_dealer_card(dealer, deck)
     
     print('\nPlayer has ' + str(player.calculate_total_rank()))
 
@@ -66,18 +65,34 @@ def start_player_game(player, dealer, deck):
 
     while game_in_progress:
         game_in_progress = player_options(player, deck, dealer)
+
     
+    if (player.is_splitting):
+        if(player.hasWon):
+            player_wins_pool(player, dealer)
+            player.is_splitting = False
+            print("You won $", player.bet, " on second hand!\n")
+        else:
+            dealer_wins_pool(player, dealer)
+            player.is_splitting = False
+            print("You lost $", player.bet, " on second hand...\n")
+            
+
     if(player.hasWon):
         player_wins_pool(player, dealer)
+        print("You won $", player.bet, "1!\n")
+        print("Your total is now: ", player.wallet)
     else:
         dealer_wins_pool(player, dealer)
+        print("You lost $", player.bet, "...\n")
+        print("Your total is now: ", player.wallet)
 
 
 # takes card from deck and hand to player
 # checks of player has lost or won
 def hit(player, dealer, deck):
 
-    dealer.deal_card(player, deck)
+    dealer.deal_player_card(player, deck)
     print('\nPlayer has ' + str(player.calculate_total_rank()))
 
     return evaluate_hit_win_condition(player)
@@ -88,7 +103,7 @@ def stand(player, dealer, deck):
     print('Dealer has ' + str(dealer.calculate_total_rank()))
 
     while(dealer.calculate_total_rank() < 17):
-        dealer.deal_card(dealer, deck)
+        dealer.deal_dealer_card(dealer, deck)
         print('\nDealer received ' + dealer.hand[len(dealer.hand) - 1].__str__())
         print('Dealer has ' + str(dealer.calculate_total_rank()) + '\n')
 
@@ -120,9 +135,64 @@ def double_down(player, dealer, deck):
         print("You don't have enough money to double down with this bet")
     else:
         player.bet *= 2
-        dealer.deal_card(player, deck)
+        dealer.deal_player_card(player, deck)
         stand(player, dealer, deck)
 
+def split(player, dealer, deck):
+    # if both cards have same rank
+    if(player.check_rank(player.hand[0][0]) == player.check_rank(player.hand[0][1])):
+        player.is_splitting = True
+        # save each card
+        card_1 = player.hand[0][0]
+        card_2 = player.hand[0][1]
+
+        # reset hand list and add two new hands in there
+        player.hand = [[], []]
+
+        # add the cards to each hand
+        player.hand[0].append(card_1)
+        player.hand[1].append(card_2)
+
+        dealer.deal_split(player, deck, 0)
+        dealer.deal_split(player, deck, 1)
+
+        return True
+        
+    else:
+        print("You don't have same cards")
+        return False
+
+def stand_after_splt(player, dealer, deck, index):
+    
+
+    print('\nPlayer has ' + str(player.calculate_split_rank(0)))
+    print('\nDealers hidden card is: ' + dealer.hand[1].__str__())
+    print('Dealer has ' + str(dealer.calculate_total_rank()))
+
+    while(dealer.calculate_total_rank() < 17):
+        dealer.deal_dealer_card(dealer, deck)
+        print('\nDealer received ' + dealer.hand[len(dealer.hand) - 1].__str__())
+        print('Dealer has ' + str(dealer.calculate_total_rank()) + '\n')
+
+    return evaluate_split_win_condition(player, dealer, index)
+
+def evaluate_split_win_condition(player, dealer, index):
+    if player.calculate_split_rank(index) > 21:
+        player.hasWon = False
+        return False
+    elif dealer.calculate_total_rank() > 21:
+        player.hasWon = True
+        return False
+    elif(player.calculate_split_rank(index) > dealer.calculate_total_rank()):
+        player.hasWon = True
+        return False
+    elif(player.calculate_split_rank(index) < dealer.calculate_total_rank()):
+        player.hasWon = False
+        return False
+    elif(player.calculate_split_rank(index) == dealer.calculate_total_rank()):
+        print("\nIt's a tie")
+        player.hasWon = False
+        return False
 
 def start_dealer_game():
     pass
@@ -143,8 +213,10 @@ def player_options(player, deck, dealer):
     elif choice == '3':
         return double_down(player, dealer, deck)
     elif choice == '4':
-        pass
+        split(player, dealer, deck)
     elif choice == '5':
+        pass
+    elif choice == '6':
         pass
 
 # uses players choice and acts accordingly
