@@ -42,6 +42,7 @@ def start_game(game_running):
             start_player_game(player, dealer, deck.cards)
         elif choice == '2':
             print("\nDealer chosen\n")
+            start_dealer_game(player, dealer, deck.cards)
         elif choice == '3':
             print("\nGame Quitting...")
             game_running = False
@@ -225,8 +226,52 @@ def surrender(player, dealer):
         print("\nYou can only surrender on your first turn.")
         return True
 
-def start_dealer_game():
-    pass
+def start_dealer_game(player, dealer, deck):
+    #player places a random bet
+    player.bet = random.randrange(1, player.wallet, 1)
+    print("\nPlayer bets " + str(player.bet))
+    
+    dealer.deal_player_card(player, deck)
+    dealer.deal_dealer_card(dealer, deck)
+    dealer.deal_player_card(player, deck)
+    dealer.deal_dealer_card(dealer, deck)
+
+    print('\nPlayer has ' + str(player.calculate_total_rank()))
+    
+    game_in_progress = True
+
+    while game_in_progress:
+        game_in_progress = ai_choices(player, deck, dealer)
+
+    if (player.is_splitting):
+        print('\nPlayer has second hand ' + str(player.calculate_split_rank(1)))
+        if(player.splitWon):
+            player_wins_pool(player, dealer)
+            player.is_splitting = False
+            print("You won $", player.bet, " on second hand!\n")
+        else:
+            dealer_wins_pool(player, dealer)
+            player.is_splitting = False
+            print("You lost $", player.bet, " on second hand...\n")
+
+
+    # print('\nPlayer has fist hand ' + str(player.calculate_split_rank(0)))
+
+    if(player.hasWon):
+        player_wins_pool(player, dealer)
+        print("Player won $", player.bet, " ...\n")
+        print("Player total is now: ", player.wallet)
+
+    elif(player.is_surrendering):
+        player.wallet -= player.bet / 2
+        dealer.wallet += player.bet / 2
+        player.is_surrendering = False
+
+    else:
+        dealer_wins_pool(player, dealer)
+        print("You won $", player.bet, "!!!\n")
+        print("Your total is now: ", dealer.wallet)
+
 
 # players options each turn
 def player_options(player, deck, dealer):
@@ -302,7 +347,11 @@ def place_bet(player):
             print("")
             ongoing_bet = False
 
-
+def ai_choices(player, deck, dealer):
+    if(player.calculate_total_rank() >= 19):
+        return stand(player, dealer, deck)
+    else:
+        return hit(player, dealer, deck)
 
 if __name__ == "__main__":
 
