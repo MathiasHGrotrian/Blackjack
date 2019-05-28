@@ -27,20 +27,25 @@ def test_hit(player, dealer, deck):
     else:
         assert myBoolean == True, 'Should be ' + str(True)
 
-def test_stand(player, dealer):
+def test_stand(player, dealer, deck):
     
-    myBoolean = Game.stand(player, dealer)
+    myBoolean = Game.stand(player, dealer, deck)
 
     if player.calculate_total_rank() > 21:
         assert myBoolean == False, 'Should be ' + str(False)
+        return
     elif dealer.calculate_total_rank() > 21:
         assert myBoolean == True, 'Should be ' + str(True)
+        return
     elif(player.calculate_total_rank() > dealer.calculate_total_rank()):
         assert myBoolean == True, 'Should be ' + str(True)
+        return
     elif(player.calculate_total_rank() < dealer.calculate_total_rank()):
         assert myBoolean == False, 'Should be ' + str(False)
+        return
     elif(player.calculate_total_rank() == dealer.calculate_total_rank()):
         assert myBoolean == False, 'Should be ' + str(False)
+        return
        
 
 def test_split(player, dealer, deck, exp_result):
@@ -64,7 +69,7 @@ if __name__ == "__main__":
 
     #stand test
     #test if winning boolean is set correct when call!
-    #test_stand(player, dealer)
+    test_stand(player, dealer, deck)
 
     #split test
     #needs to check boolean in return for continue game
