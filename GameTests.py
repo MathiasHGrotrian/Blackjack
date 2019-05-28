@@ -29,8 +29,9 @@ def test_hit(player, dealer, deck):
 
 def test_stand(player, dealer, deck):
     
-    myBoolean = Game.stand(player, dealer, deck)
+    Game.stand(player, dealer, deck)
 
+    myBoolean =  player.hasWon
     if player.calculate_total_rank() > 21:
         assert myBoolean == False, 'Should be ' + str(False)
         return
