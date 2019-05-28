@@ -5,6 +5,7 @@ import random
 from Player import Player
 from Dealer import Dealer
 from Card import Card
+from Deck import Deck
 
 # adds money from a players wallet to a pool
 def dealer_wins_pool(player, dealer):
@@ -31,7 +32,7 @@ def start_game(game_running):
         player.hand = [[]]
         dealer.hand = []
         player.bet = 0
-        deck = dealer.deck
+        deck = Deck([])
 
         print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
         
