@@ -77,13 +77,20 @@ def start_player_game(player, dealer, deck):
             dealer_wins_pool(player, dealer)
             player.is_splitting = False
             print("You lost $", player.bet, " on second hand...\n")
-            
 
-    print('\nPlayer has fist hand ' + str(player.calculate_split_rank(0)))
+
+    # print('\nPlayer has fist hand ' + str(player.calculate_split_rank(0)))
+
     if(player.hasWon):
         player_wins_pool(player, dealer)
         print("You won $", player.bet, "!\n")
         print("Your total is now: ", player.wallet)
+
+    elif(player.is_surrendering):
+        player.wallet -= player.bet / 2
+        dealer.wallet += player.bet / 2
+        player.is_surrendering = False
+
     else:
         dealer_wins_pool(player, dealer)
         print("You lost $", player.bet, "...\n")
@@ -209,6 +216,15 @@ def evaluate_split_win_condition_sec_hand(player, dealer):
         print("\nIt's a tie")
         player.splitWon = False
 
+def surrender(player, dealer):
+    if(len(player.hand[0]) == 2):
+        player.is_surrendering = True
+        print("\nYou surrender. Half of your bet forfeited to the house.")
+        return False
+    else:
+        print("\nYou can only surrender on your first turn.")
+        return True
+
 def start_dealer_game():
     pass
 
@@ -228,9 +244,9 @@ def player_options(player, deck, dealer):
     elif choice == '3':
         return double_down(player, dealer, deck)
     elif choice == '4':
-        split(player, dealer, deck)
+        return split(player, dealer, deck)
     elif choice == '5':
-        pass
+        return surrender(player, dealer)
     elif choice == '6':
         pass
 

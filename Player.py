@@ -8,6 +8,7 @@ class Player(Person):
         self.splitWon = False
         self.bet = 0
         self.is_splitting = False
+        self.is_surrendering = False
 
     def calculate_total_rank(self):
         sum_of_rank = 0
