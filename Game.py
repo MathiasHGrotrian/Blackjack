@@ -162,7 +162,7 @@ def split(player, dealer, deck):
         
     else:
         print("You don't have same cards")
-        return False
+        return True
 
 def stand_after_splt(player, dealer, deck):
     
