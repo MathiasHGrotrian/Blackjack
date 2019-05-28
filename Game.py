@@ -89,6 +89,9 @@ def start_player_game(player, dealer, deck):
         print("You lost $", player.bet, "...\n")
         print("Your total is now: ", player.wallet)
 
+   #player.hasWon = False
+    #player.splitWon = False
+
 
 # takes card from deck and hand to player
 # checks of player has lost or won
@@ -174,8 +177,9 @@ def stand_after_splt(player, dealer, deck):
         dealer.deal_dealer_card(dealer, deck)
         print('\nDealer received ' + dealer.hand[len(dealer.hand) - 1].__str__())
         print('Dealer has ' + str(dealer.calculate_total_rank()) + '\n')
-        evaluate_split_win_condition_sec_hand(player, dealer)
 
+
+    evaluate_split_win_condition_sec_hand(player, dealer)
     return evaluate_split_win_condition_first_hand(player, dealer)
 
 def evaluate_split_win_condition_first_hand(player, dealer):
@@ -197,17 +201,23 @@ def evaluate_split_win_condition_first_hand(player, dealer):
         return False
 
 def evaluate_split_win_condition_sec_hand(player, dealer):
+    #print('player current rank: ' + str(player.calculate_split_rank(1)) + "dealer current rank: " +  str(dealer.calculate_split_rank()))
     if player.calculate_split_rank(1) > 21:
         player.splitWon = False
+        return
     elif dealer.calculate_total_rank() > 21:
         player.splitWon = True
+        return
     elif(player.calculate_split_rank(1) > dealer.calculate_total_rank()):
         player.splitWon = True
+        return
     elif(player.calculate_split_rank(1) < dealer.calculate_total_rank()):
         player.splitWon = False
+        return
     elif(player.calculate_split_rank(1) == dealer.calculate_total_rank()):
         print("\nIt's a tie")
         player.splitWon = False
+        return
 
 def start_dealer_game():
     pass
