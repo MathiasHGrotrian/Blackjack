@@ -28,7 +28,7 @@ def start_game(game_running):
         
         #Resets for a new round
         # Player has a list within list so he can have two hands for splitting
-        player.hand = [[Card('Hearts', 10),Card('Clubs', 10) ]]
+        player.hand = [[]]
         dealer.hand = []
         player.bet = 0
         deck = dealer.deck
@@ -54,9 +54,9 @@ def start_player_game(player, dealer, deck):
 
     place_bet(player)
 
-    #dealer.deal_player_card(player, deck)
+    dealer.deal_player_card(player, deck)
     dealer.deal_dealer_card(dealer, deck)
-    #dealer.deal_player_card(player, deck)
+    dealer.deal_player_card(player, deck)
     dealer.deal_dealer_card(dealer, deck)
     
     print('\nPlayer has ' + str(player.calculate_total_rank()))
@@ -174,8 +174,8 @@ def stand_after_splt(player, dealer, deck):
         dealer.deal_dealer_card(dealer, deck)
         print('\nDealer received ' + dealer.hand[len(dealer.hand) - 1].__str__())
         print('Dealer has ' + str(dealer.calculate_total_rank()) + '\n')
-        evaluate_split_win_condition_sec_hand(player, dealer)
-
+    
+    evaluate_split_win_condition_sec_hand(player, dealer)
     return evaluate_split_win_condition_first_hand(player, dealer)
 
 def evaluate_split_win_condition_first_hand(player, dealer):
