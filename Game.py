@@ -37,6 +37,13 @@ def start_game(game_running):
         deck = Deck([])
 
         print('Welcome to Blackjack\nPlease choose yor role:\n1. Player\n2. Dealer\n3. Quit Game')
+
+        if(player.wallet < 2):
+            print("Player do not have more money, Player lost! \nThe End")
+            game_running = False
+        if(dealer.wallet < 2):
+            print("Dealer do not have more money, Dealer lost! \nThe End")
+            game_running = False
         
         choice = input()
 

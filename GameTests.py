@@ -115,17 +115,20 @@ if __name__ == "__main__":
     test_ai_moves(player_ai, dealer_ai, deck, False)
     '''
 
-    '''
+    
     #Double down
-    player_ai = Player('Player', 1000, [[Card('Hearts', 4),Card('Clubs', 5)]])
+    player_ai = Player('Player', 100, [[Card('Hearts', 4),Card('Clubs', 5)]])
     dealer_ai = Dealer('Dealer', 1000, [Card('Spades', 10),Card('Hearts', 2)])
+    player_ai.bet = 20
     test_ai_moves(player_ai, dealer_ai, deck, False)
-    '''
+    
 
+    '''
     #Stand
     player_ai = Player('Player', 1000, [[Card('Hearts', 10),Card('Clubs', 9)]])
     dealer_ai = Dealer('Dealer', 1000, [Card('Spades', 10),Card('Hearts', 2)])
     test_ai_moves(player_ai, dealer_ai, deck, False)
+    '''
 
 
     #Test double down

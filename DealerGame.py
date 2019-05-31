@@ -53,7 +53,7 @@ def ai_choices(player, dealer, deck):
     if(player.check_rank(player.hand[0][0]) > 7 and player.check_rank(player.hand[0][0]) == player.check_rank(player.hand[0][1]) ):
         print("Player splits")
         return Game.split(player, dealer, deck)
-    elif(player.calculate_total_rank() == 10 or player.calculate_total_rank() == 9):
+    elif(player.wallet > player.bet * 2):
         print("Player doubles down")
         return Game.double_down(player, dealer, deck)
     elif(player.calculate_total_rank() == 16 and len(player.hand[0]) == 2):
