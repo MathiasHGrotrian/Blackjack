@@ -1,6 +1,8 @@
 # main class running the program
 
 import random
+import PlayerGame
+import DealerGame
 
 from Player import Player
 from Dealer import Dealer
@@ -40,66 +42,15 @@ def start_game(game_running):
 
         if choice == '1':
             print("\nPlayer chosen\n")
-            start_player_game(player, dealer, deck.cards)
+            PlayerGame.start_player_game(player, dealer, deck.cards)
         elif choice == '2':
             print("\nDealer chosen\n")
-            start_dealer_game(player, dealer, deck.cards)
+            DealerGame.start_dealer_game(player, dealer, deck.cards)
         elif choice == '3':
             print("\nGame Quitting...")
             game_running = False
         else:
             print('\nInvalid choice.\nPlease enter a valid number\n')
-
-# starts the game if player chooses to be a player and deals cards
-# keeps game going until player has lost or won
-def start_player_game(player, dealer, deck):
-
-    place_bet(player)
-
-    dealer.deal_player_card(player, deck)
-    dealer.deal_dealer_card(dealer, deck)
-    dealer.deal_player_card(player, deck)
-    dealer.deal_dealer_card(dealer, deck)
-    
-    print('\nPlayer has ' + str(player.calculate_total_rank()))
-
-    game_in_progress = True
-
-    while game_in_progress:
-        game_in_progress = player_options(player, dealer, deck)
-
-    
-    if (player.is_splitting):
-        print('\nPlayer has second hand ' + str(player.calculate_split_rank(1)))
-        if(player.splitWon):
-            player_wins_pool(player, dealer)
-            player.is_splitting = False
-            print("You won $", player.bet, " on second hand!\n")
-        else:
-            dealer_wins_pool(player, dealer)
-            player.is_splitting = False
-            print("You lost $", player.bet, " on second hand...\n")
-
-
-    # print('\nPlayer has fist hand ' + str(player.calculate_split_rank(0)))
-
-    if(player.hasWon):
-        player_wins_pool(player, dealer)
-        print("You won $", player.bet, "!\n")
-        print("Player total is now: ", player.wallet)
-        print("Dealer total is now: ", dealer.wallet, "\n")
-
-    elif(player.is_surrendering):
-        player.wallet -= player.bet / 2
-        dealer.wallet += player.bet / 2
-        player.is_surrendering = False
-
-    else:
-        dealer_wins_pool(player, dealer)
-        print("You lost $", player.bet, "...\n")
-        print("Player total is now: ", player.wallet)
-        print("Dealer total is now: ", dealer.wallet, "\n")
-
 
 # takes card from deck and hand to player
 # checks of player has lost or won
@@ -230,77 +181,6 @@ def surrender(player, dealer):
         print("\nYou can only surrender on your first turn.")
         return True
 
-def start_dealer_game(player, dealer, deck):
-    #player places a random bet
-    player.bet = random.randrange(1, player.wallet, 1)
-    print("\nPlayer bets " + str(player.bet))
-    
-    dealer.deal_player_card(player, deck)
-    dealer.deal_dealer_card(dealer, deck)
-    dealer.deal_player_card(player, deck)
-    dealer.deal_dealer_card(dealer, deck)
-
-    print('\nPlayer has ' + str(player.calculate_total_rank()))
-    
-    game_in_progress = True
-
-    while game_in_progress:
-        game_in_progress = ai_choices(player, dealer, deck)
-
-    if (player.is_splitting):
-        print('\nPlayer has second hand ' + str(player.calculate_split_rank(1)))
-        if(player.splitWon):
-            player_wins_pool(player, dealer)
-            player.is_splitting = False
-            print("You won $", player.bet, " on second hand!\n")
-        else:
-            dealer_wins_pool(player, dealer)
-            player.is_splitting = False
-            print("You lost $", player.bet, " on second hand...\n")
-
-
-    # print('\nPlayer has fist hand ' + str(player.calculate_split_rank(0)))
-
-    if(player.hasWon):
-        player_wins_pool(player, dealer)
-        print("Player won $", player.bet, " ...\n")
-        print("Player total is now: ", player.wallet)
-        print("Dealer total is now: ", dealer.wallet, "\n")
-
-    elif(player.is_surrendering):
-        player.wallet -= player.bet / 2
-        dealer.wallet += player.bet / 2
-        player.is_surrendering = False
-
-    else:
-        dealer_wins_pool(player, dealer)
-        print("You won $", player.bet, "!!!\n")
-        print("Player total is now: ", player.wallet)
-        print("Dealer total is now: ", dealer.wallet, "\n")
-
-
-# players options each turn
-def player_options(player, dealer, deck):
-
-    print('Dealer has ' + dealer.hand[0].__str__())
-
-    print('-Choose an action\n1. Hit\n2. Stand\n3. Double Down\n4. Split\n5. Surrender')
-    
-    choice = input()
-
-    if choice == '1':
-        return hit(player, dealer, deck)
-    elif choice == '2':
-        return stand(player, dealer, deck)
-    elif choice == '3':
-        return double_down(player, dealer, deck)
-    elif choice == '4':
-        return split(player, dealer, deck)
-    elif choice == '5':
-        return surrender(player, dealer)
-    else:
-        print("Please select a valid option")
-        return True
 
 # uses players choice and acts accordingly
 # returns false if game is over in any way, to break out of loop, else keep game going and return true
@@ -318,58 +198,6 @@ def evaluate_hit_win_condition(player):
     #continue hitting
     else:
         return True
-
-
-# player can place a bet, which will be varified.
-# returns current pool  
-def place_bet(player):
-    print("\nYou currently have ", player.wallet)
-    print("\nPlace your bets:")
-
-    ongoing_bet = True
-    
-    while(ongoing_bet):
-        
-        #makes sure that bet is numeric
-        checkdigits = True
-        while(checkdigits):
-            bet = input()
-            if(bet.isdigit()):
-                bet = int(bet)
-                checkdigits = False
-            else:
-                print("Please enter numbers, not letters\n")
-
-        
-
-        if(bet <= 0):
-            print("Please place a valid amount\n")
-            
-        elif(bet > player.wallet):
-            print("You don't have enough money to place that bet\n")
-            
-        else:
-            player.bet += bet
-            print("Your bet: ", bet)
-            print("")
-            ongoing_bet = False
-
-def ai_choices(player, dealer, deck):
-    if(player.check_rank(player.hand[0][0]) > 7 and player.check_rank(player.hand[0][0]) == player.check_rank(player.hand[0][1]) ):
-        print("Player splits")
-        return split(player, dealer, deck)
-    elif(player.calculate_total_rank() == 10 or player.calculate_total_rank() == 9):
-        print("Player doubles down")
-        return double_down(player, dealer, deck)
-    elif(player.calculate_total_rank() == 16 and len(player.hand[0]) == 2):
-        print("Player surrenders")
-        return surrender(player, dealer)
-    elif(player.calculate_total_rank() >= 19):
-        print("Player stands")
-        return stand(player, dealer, deck)
-    else:
-        print("Player hits")
-        return hit(player, dealer, deck)
 
 if __name__ == "__main__":
 

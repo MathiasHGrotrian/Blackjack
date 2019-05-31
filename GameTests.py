@@ -1,5 +1,8 @@
 
 import unittest
+import DealerGame
+import PlayerGame
+
 from Player import Player
 from Dealer import Dealer
 import Game
@@ -55,7 +58,7 @@ def test_split(player, dealer, deck, exp_result):
 
 #AI Method
 def test_ai_moves(player, dealer, deck, exp_result):
-    assert Game.ai_choices(player, dealer, deck) == exp_result, 'Should be ' + str(exp_result)
+    assert DealerGame.ai_choices(player, dealer, deck) == exp_result, 'Should be ' + str(exp_result)
 
 if __name__ == "__main__":
 
